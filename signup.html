@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إنشاء حساب - World Of Anime</title>
+  <link rel="stylesheet" href="../Css/style.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="brand-mark">⚡</span>
+      <span>World Of Anime</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" data-i18n="nav-home">الرئيسية</a></li>
+        <li><a href="products.html" data-i18n="nav-products">المنتجات</a></li>
+        <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
+        <li><a href="signup.html" class="active" data-i18n="nav-signup">إنشاء حساب</a></li>
+      </ul>
+    </nav>
+    <div class="lang-switch" aria-label="language switcher">
+      <button class="lang-btn" data-lang="ar">العربية</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="auth-card">
+      <h2 data-i18n="signup-title">✨ إنشاء حساب جديد</h2>
+      <p data-i18n="signup-desc">انضم إلى مجتمع الأنمي وابدأ رحلتك مع أفضل المنتجات.</p>
+
+      <form id="signupForm">
+        <label for="signup-name" data-i18n="name-label">الاسم</label>
+        <input type="text" id="signup-name" data-i18n-placeholder="name-placeholder" placeholder="أدخل اسمك">
+
+        <label for="signup-email" data-i18n="email-label">البريد الإلكتروني</label>
+        <input type="email" id="signup-email" data-i18n-placeholder="email-placeholder" placeholder="example@email.com">
+
+        <label for="signup-password" data-i18n="password-label">كلمة المرور</label>
+        <input type="password" id="signup-password" data-i18n-placeholder="password-placeholder" placeholder="••••••••">
+
+        <button type="submit" data-i18n="signup-button">إنشاء الحساب</button>
+      </form>
+
+      <p id="message" style="margin-top: 15px; text-align: center; font-weight: bold;"></p>
+      <p class="form-link"><a href="login.html" data-i18n="login-link">لديك حساب بالفعل؟ تسجيل الدخول</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 World Of Anime</p>
+  </footer>
+
+  <script src="../js/script.js"></script>
+</body>
+</html>

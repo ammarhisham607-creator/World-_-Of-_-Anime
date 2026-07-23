@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>المنتجات - World Of Anime</title>
+  <link rel="stylesheet" href="../Css/style.css">
+  <style>
+    /* تنسيق كروت المنتجات لتناسب الديكور النيون */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .product-card {
+      background: rgba(13, 10, 26, 0.8);
+      border: 1px solid var(--primary-neon);
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.2);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 20px var(--primary-neon), 0 0 10px var(--secondary-neon);
+      border-color: var(--secondary-neon);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+    }
+
+    .product-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      font-size: 20px;
+      color: var(--accent-yellow);
+      font-weight: 900;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px rgba(255, 230, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <span class="brand-mark">⚡</span>
+      <span>World Of Anime</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" data-i18n="nav-home">الرئيسية</a></li>
+        <li><a href="products.html" class="active" data-i18n="nav-products">المنتجات</a></li>
+        <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
+        <li><a href="signup.html" data-i18n="nav-signup">إنشاء حساب</a></li>
+      </ul>
+    </nav>
+    <div class="lang-switch" aria-label="language switcher">
+      <button class="lang-btn" data-lang="ar">العربية</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="section-card">
+      <div class="section-header">
+        <div>
+          <h2 data-i18n="products-title">⚔️ قائمة منتجات الأنمي</h2>
+          <p data-i18n="products-desc">اختر منتجك المفضل من السيوف، المجسمات، والبوسترات:</p>
+        </div>
+      </div>
+
+      <div id="products-container" class="products-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 World Of Anime</p>
+  </footer>
+<script>
+  const demoProducts = [
+    {
+      title: { ar: 'سيف زورو - Enma Katana', en: 'Zoro Sword - Enma Katana' },
+      price: '1,200',
+      image: 'https://images.unsplash.com/photo-1582550907404-5ec7b4a3f6b4?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+      title: { ar: 'مجسم لوفي Gear 5', en: 'Luffy Gear 5 Figure' },
+      price: '850',
+      image: 'https://images.unsplash.com/photo-1608889825103-5041190c1d9f?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+      title: { ar: 'بوستر ناروتو - Team 7', en: 'Naruto Poster - Team 7' },
+      price: '320',
+      image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+      title: { ar: 'تيشيرت ساسكي أوتشيها', en: 'Sasuke Uchiha T-Shirt' },
+      price: '450',
+      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+      title: { ar: 'مجسم إيتاشي أكتا', en: 'Itachi Uchiha Figure' },
+      price: '980',
+      image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+      title: { ar: 'ميدالية كاكااشي', en: 'Kakashi Badge' },
+      price: '600',
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80'
+    }
+  ];
+
+  const container = document.getElementById('products-container');
+
+  function renderProducts(lang) {
+    if (!container) return;
+    container.innerHTML = demoProducts.map(product => `
+      <div class="product-card">
+        <img src="${product.image}" alt="${product.title[lang]}">
+        <div class="product-title">${product.title[lang]}</div>
+        <div class="product-price">${product.price} ${lang === 'ar' ? 'ج.م' : 'EGP'}</div>
+        <button onclick="alert('${lang === 'ar' ? 'تمت الإضافة للسلة!' : 'Added to cart!'}')">${lang === 'ar' ? 'إضافة للسلة 🛒' : 'Add to cart 🛒'}</button>
+      </div>
+    `).join('');
+  }
+
+  window.renderProducts = renderProducts;
+</script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
