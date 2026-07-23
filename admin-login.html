@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل دخول المدير - World Of Anime</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../Css/style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">تخطي للمحتوى</a>
+<div class="loader hidden" id="app-loader"><div class="loader-core"></div></div>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="brand"><span class="brand-mark">⛩️</span><span>World Of Anime</span></a>
+  </div>
+</header>
+
+<main id="main-content">
+  <section class="auth-card">
+    <h2>🔒 تسجيل دخول المدير</h2>
+    <p>أدخل بيانات المدير للوصول للوحة التحكم</p>
+    <form id="adminLoginForm">
+      <label for="admin-user">اسم المستخدم</label>
+      <input type="text" id="admin-user" required autocomplete="username">
+      <label for="admin-pass">كلمة المرور</label>
+      <input type="password" id="admin-pass" required autocomplete="current-password">
+      <button type="submit">دخول</button>
+    </form>
+    <p id="admin-msg" style="margin-top:10px;text-align:center;font-weight:700;"></p>
+  </section>
+</main>
+
+<script src="../js/data.js"></script>
+<script>window.renderProducts=function(){};</script>
+<script src="../js/script.js"></script>
+</body>
+</html>

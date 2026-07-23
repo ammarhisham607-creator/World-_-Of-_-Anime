@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل المنتج - World Of Anime</title>
+  <meta name="description" content="تصفح واشتري منتجات الأنمي الأصلية من World Of Anime">
+  <link rel="stylesheet" href="../Css/style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">تخطي للمحتوى</a>
+<div class="loader hidden" id="app-loader">
+  <div class="loader-core"></div>
+</div>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">⛩️</span>
+      <span>World Of Anime</span>
+    </a>
+    <div class="search-bar">
+      <select id="search-category">
+        <option value="" data-i18n="all-categories">كل التصنيفات</option>
+        <option value="swords">⚔️ السيوف</option>
+        <option value="figures">🗿 المجسمات</option>
+        <option value="posters">🖼️ البوسترات</option>
+        <option value="tshirts">👕 الملابس</option>
+        <option value="accessories">💎 الإكسسوارات</option>
+        <option value="manga">📚 المانجا</option>
+      </select>
+      <input type="text" id="search-input" data-i18n-placeholder="search-placeholder" placeholder="ابحث عن منتجات أنمي...">
+      <button id="search-btn">🔍</button>
+    </div>
+    <div class="header-actions">
+      <a href="wishlist.html" class="header-btn">❤️ <span data-i18n="nav-wishlist">المفضلة</span></a>
+      <a href="cart.html" class="header-btn">🛒 <span data-i18n="nav-cart">السلة</span><span class="cart-count empty">0</span></a>
+      <a href="profile.html" class="header-btn">👤 <span data-i18n="nav-profile">حسابي</span></a>
+    </div>
+  </div>
+  <div class="header-nav">
+    <ul class="nav-links">
+      <li><a href="index.html" data-i18n="nav-home">الرئيسية</a></li>
+      <li><a href="products.html" data-i18n="nav-products">المنتجات</a></li>
+      <li><a href="products.html?category=swords">⚔️ السيوف</a></li>
+      <li><a href="products.html?category=figures">🗿 المجسمات</a></li>
+      <li><a href="products.html?category=manga">📚 المانجا</a></li>
+      <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
+    </ul>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="ar">العربية</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </div>
+</header>
+
+<main id="main-content"></main>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-contact"><span>📱 واتساب: <a href="https://wa.me/201149243249" target="_blank" rel="noopener">01149243249</a></span></div>
+    <div class="footer-links">
+      <a href="index.html" data-i18n="nav-home">الرئيسية</a>
+      <a href="products.html" data-i18n="nav-products">المنتجات</a>
+      <a href="cart.html" data-i18n="nav-cart">السلة</a>
+      <a href="login.html" data-i18n="nav-login">تسجيل الدخول</a>
+      <a href="signup.html" data-i18n="nav-signup">إنشاء حساب</a>
+    </div>
+    <p>© 2026 World Of Anime — All Rights Reserved</p>
+  </div>
+</footer>
+
+<script src="../js/data.js"></script>
+<script>
+  async function renderProductDetail() {
+    const id = getUrlParam('id');
+    const product = getProductById(id);
+    const main = document.getElementById('main-content');
+    if (!main) return;
+
+    if (!product) {
+      main.innerHTML = `<div style="text-align:center;padding:60px;"><h2>Product not found</h2><a href="products.html" class="btn" style="margin-top:16px;">${t('browse-products')}</a></div>`;
+      return;
+    }
+
+    const wishlisted = isWishlisted(product.id);
+    const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+
+    const seedReviews = [
+      { author: currentLang === 'ar' ? 'أحمد م.' : 'Ahmed M.', rating: 5, text: currentLang === 'ar' ? 'منتج ممتاز جداً، الجودة عالية والتوصيل كان سريع!' : 'Excellent product, great quality and fast delivery!' },
+      { author: currentLang === 'ar' ? 'سارة ع.' : 'Sara A.', rating: 4, text: currentLang === 'ar' ? 'حلو أوي بس التغليف ممكن يكون أحسن. عموماً مبسوطة.' : 'Very nice but packaging could be better. Overall happy.' },
+      { author: currentLang === 'ar' ? 'محمد ك.' : 'Mohamed K.', rating: 5, text: currentLang === 'ar' ? 'أفضل منتج اشتريته من الموقع، هطلب تاني أكيد!' : 'Best product I bought from the site, will definitely order again!' }
+    ];
+    // Real customer reviews now come from the central database (Supabase)
+    // instead of this browser's own localStorage.
+    const customerReviews = await getReviews(product.id);
+
+    main.innerHTML = `
+      <div class="product-detail">
+        <div class="product-gallery">
+          <div class="product-gallery-main">
+            <img src="${product.images[0]}" alt="${product.title[currentLang]}">
+          </div>
+        </div>
+        <div class="product-info">
+          <h1>${product.title[currentLang]}</h1>
+          <div class="product-rating">
+            <span class="stars">${getStars(product.rating)}</span>
+            <span class="rating-count">${product.rating} (${product.reviews} ${t('product-reviews')})</span>
+          </div>
+          <div class="product-price" style="margin:16px 0;">${formatPrice(product.price)}</div>
+          ${product.oldPrice ? `<div class="product-old-price">${formatPrice(product.oldPrice)}</div>` : ''}
+
+          <!-- STOCK INFO -->
+          <div style="display:flex;gap:16px;margin:12px 0;font-size:0.88rem;">
+            <span style="color:${product.stock>0?'var(--green)':'var(--red)'}">● ${product.stock > 0 ? t('stock') + ': ' + product.stock : t('out-of-stock')}</span>
+            <span style="color:var(--muted);">${t('sold')}: ${product.sold}</span>
+          </div>
+          
+          <p class="product-description">${product.description[currentLang]}</p>
+
+          ${product.sizes.length > 0 ? `
+            <div class="size-selector">
+              <h3 data-i18n="size">${t('size')}</h3>
+              <div class="size-options">
+                ${product.sizes.map((s, i) => `<button class="size-option ${i === 0 ? 'active' : ''}" onclick="selectSize(this, '${s}')">${s}</button>`).join('')}
+              </div>
+            </div>` : ''}
+
+          <div style="display:flex;align-items:center;gap:16px;margin:20px 0;">
+            <span style="font-weight:800;" data-i18n="quantity">${t('quantity')}:</span>
+            <div class="quantity-selector">
+              <button onclick="changeQty(-1)">−</button>
+              <span id="qty-value">1</span>
+              <button onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+
+          <div class="product-detail-actions">
+            <button class="btn" onclick="handleAddToCart(${product.id})">🛒 ${t('add-to-cart')}</button>
+            <button class="btn secondary" onclick="toggleWishlist(${product.id});this.classList.toggle('active')">
+              ${wishlisted ? '❤️' : '🤍'} ${t('add-to-wishlist')}
+            </button>
+          </div>
+          <button class="btn block" style="margin-top:12px;background:linear-gradient(135deg,#00c853,#00897b);" onclick="handleAddToCart(${product.id});window.location.href='checkout.html'">
+            ⚡ ${t('buy-now')}
+          </button>
+        </div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="reviews-section">
+        <div class="section-title"><h2>${t('product-reviews')}</h2></div>
+        <div id="reviews-list">
+          ${seedReviews.map(r => `<div class="review-card"><div class="review-header"><span class="review-author">${r.author}</span><span class="stars">${getStars(r.rating)}</span></div><p style="color:var(--muted);">${r.text}</p></div>`).join('')}
+          ${customerReviews.map(r => `<div class="review-card"><div class="review-header"><span class="review-author">${r.author}</span><span class="stars">${getStars(r.rating)}</span></div><p style="color:var(--muted);">${r.text}</p></div>`).join('')}
+        </div>
+
+        <div class="review-form">
+          <h3>${t('write-review')}</h3>
+          <div style="margin-bottom:10px;">
+            <label style="font-weight:700;font-size:0.88rem;display:block;margin-bottom:6px;">${t('your-rating')}</label>
+            <div class="star-input" id="star-input">
+              <button type="button" onclick="setRating(1)">☆</button>
+              <button type="button" onclick="setRating(2)">☆</button>
+              <button type="button" onclick="setRating(3)">☆</button>
+              <button type="button" onclick="setRating(4)">☆</button>
+              <button type="button" onclick="setRating(5)">☆</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>${t('your-comment')}</label>
+            <textarea id="review-text" rows="3"></textarea>
+          </div>
+          <button class="btn sm" onclick="submitReview(${product.id})">${t('submit-review')}</button>
+        </div>
+      </div>
+
+      <!-- RELATED PRODUCTS -->
+      ${related.length > 0 ? `
+        <div style="margin-top:48px;">
+          <div class="section-title"><h2 data-i18n="related-products">${t('related-products')}</h2></div>
+          <div class="products-grid">${related.map(renderProductCard).join('')}</div>
+        </div>` : ''}`;
+  }
+
+  let selectedSize = '';
+  let currentQty = 1;
+
+  function selectSize(btn, size) {
+    document.querySelectorAll('.size-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedSize = size;
+  }
+
+  function changeQty(delta) {
+    currentQty = Math.max(1, currentQty + delta);
+    const el = document.getElementById('qty-value');
+    if (el) el.textContent = currentQty;
+  }
+
+  function handleAddToCart(id) {
+    addToCart(id, currentQty, selectedSize);
+  }
+
+  window.renderProductDetail = renderProductDetail;
+
+  let selectedRating = 0;
+  function setRating(n) {
+    selectedRating = n;
+    document.querySelectorAll('#star-input button').forEach((b, i) => {
+      b.textContent = i < n ? '★' : '☆';
+      b.classList.toggle('active', i < n);
+    });
+  }
+
+  async function submitReview(productId) {
+    if (!selectedRating) return;
+    const text = document.getElementById('review-text')?.value?.trim();
+    if (!text) return;
+    const user = JSON.parse(localStorage.getItem('anime-user') || '{}');
+    await saveReview(productId, {
+      author: user.name || (currentLang === 'ar' ? 'زائر' : 'Guest'),
+      rating: selectedRating,
+      text: text,
+      date: new Date().toISOString()
+    });
+    await renderProductDetail();
+  }
+</script>
+<script src="../js/script.js"></script>
+</body>
+</html>

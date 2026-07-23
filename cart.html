@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>السلة - World Of Anime</title>
+  <meta name="description" content="راجع المنتجات المضافة لسلة التسوق وتابع لإتمام الطلب.">
+  <link rel="stylesheet" href="../Css/style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">تخطي للمحتوى</a>
+<div class="loader hidden" id="app-loader">
+  <div class="loader-core"></div>
+</div>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">⛩️</span>
+      <span>World Of Anime</span>
+    </a>
+    <div class="search-bar">
+      <select id="search-category">
+        <option value="" data-i18n="all-categories">كل التصنيفات</option>
+        <option value="swords">⚔️ السيوف</option>
+        <option value="figures">🗿 المجسمات</option>
+        <option value="posters">🖼️ البوسترات</option>
+        <option value="tshirts">👕 الملابس</option>
+        <option value="accessories">💎 الإكسسوارات</option>
+        <option value="manga">📚 المانجا</option>
+      </select>
+      <input type="text" id="search-input" data-i18n-placeholder="search-placeholder" placeholder="ابحث عن منتجات أنمي...">
+      <button id="search-btn">🔍</button>
+    </div>
+    <div class="header-actions">
+      <a href="wishlist.html" class="header-btn">❤️ <span data-i18n="nav-wishlist">المفضلة</span></a>
+      <a href="cart.html" class="header-btn">🛒 <span data-i18n="nav-cart">السلة</span><span class="cart-count empty">0</span></a>
+      <a href="profile.html" class="header-btn">👤 <span data-i18n="nav-profile">حسابي</span></a>
+    </div>
+  </div>
+  <div class="header-nav">
+    <ul class="nav-links">
+      <li><a href="index.html" data-i18n="nav-home">الرئيسية</a></li>
+      <li><a href="products.html" data-i18n="nav-products">المنتجات</a></li>
+      <li><a href="products.html?category=swords">⚔️ السيوف</a></li>
+      <li><a href="products.html?category=figures">🗿 المجسمات</a></li>
+      <li><a href="products.html?category=manga">📚 المانجا</a></li>
+      <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
+    </ul>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="ar">العربية</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </div>
+</header>
+
+<main id="main-content"></main>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-contact"><span>📱 واتساب: <a href="https://wa.me/201149243249" target="_blank" rel="noopener">01149243249</a></span></div>
+    <div class="footer-links">
+      <a href="index.html" data-i18n="nav-home">الرئيسية</a>
+      <a href="products.html" data-i18n="nav-products">المنتجات</a>
+      <a href="cart.html" data-i18n="nav-cart">السلة</a>
+      <a href="login.html" data-i18n="nav-login">تسجيل الدخول</a>
+      <a href="signup.html" data-i18n="nav-signup">إنشاء حساب</a>
+    </div>
+    <p>© 2026 World Of Anime — All Rights Reserved</p>
+  </div>
+</footer>
+
+<script src="../js/data.js"></script>
+<script>
+  function renderCart() {
+    const main = document.getElementById('main-content');
+    if (!main) return;
+    const cart = getCart();
+
+    if (cart.length === 0) {
+      main.innerHTML = `
+        <div class="empty-cart">
+          <div class="empty-cart-icon">🛒</div>
+          <h2 data-i18n="cart-empty">${t('cart-empty')}</h2>
+          <p data-i18n="cart-empty-desc">${t('cart-empty-desc')}</p>
+          <a href="products.html" class="btn" data-i18n="browse-products">${t('browse-products')}</a>
+        </div>`;
+      return;
+    }
+
+    const itemsHtml = cart.map(item => {
+      const p = getProductById(item.id);
+      if (!p) return '';
+      return `
+        <div class="cart-item">
+          <div class="cart-item-img">
+            <a href="product-detail.html?id=${p.id}"><img src="${p.images[0]}" alt="${p.title[currentLang]}"></a>
+          </div>
+          <div class="cart-item-info">
+            <h3><a href="product-detail.html?id=${p.id}">${p.title[currentLang]}</a></h3>
+            ${item.size ? `<span style="color:var(--muted);font-size:0.85rem;">${t('size')}: ${item.size}</span>` : ''}
+            <div class="cart-item-price">${formatPrice(p.price)}</div>
+            <div class="cart-item-controls">
+              <div class="quantity-selector">
+                <button onclick="updateCartQuantity(${p.id}, ${item.quantity - 1}, '${item.size}');renderCart()">−</button>
+                <span>${item.quantity}</span>
+                <button onclick="updateCartQuantity(${p.id}, ${item.quantity + 1}, '${item.size}');renderCart()">+</button>
+              </div>
+              <button class="cart-item-remove" onclick="removeFromCart(${p.id}, '${item.size}');renderCart()">🗑️ ${t('remove')}</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const total = getCartTotal();
+
+    main.innerHTML = `
+      <div class="section-title"><h2 data-i18n="cart-title">${t('cart-title')}</h2></div>
+      <div class="cart-layout">
+        <div class="cart-items">${itemsHtml}</div>
+        <div class="cart-summary">
+          <h2 data-i18n="cart-title">${t('cart-title')}</h2>
+          <div class="cart-summary-row">
+            <span data-i18n="subtotal">${t('subtotal')}</span>
+            <span>${formatPrice(total)}</span>
+          </div>
+          <div class="cart-summary-row">
+            <span data-i18n="shipping">${t('shipping')}</span>
+            <span style="color:var(--success);" data-i18n="free-shipping">${t('free-shipping')}</span>
+          </div>
+          <div class="cart-summary-row total">
+            <span data-i18n="total">${t('total')}</span>
+            <span>${formatPrice(total)}</span>
+          </div>
+          <a href="checkout.html" class="btn block" data-i18n="proceed-to-checkout">${t('proceed-to-checkout')}</a>
+          <a href="products.html" class="btn block outline" style="margin-top:8px;" data-i18n="continue-shopping">${t('continue-shopping')}</a>
+        </div>
+      </div>`;
+  }
+
+  window.renderCart = renderCart;
+</script>
+<script src="../js/script.js"></script>
+</body>
+</html>
